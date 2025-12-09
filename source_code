@@ -1,0 +1,127 @@
+* Day-1 *
+
+238.Product of an array except self
+
+class Solution:
+    def productExceptSelf(self, nums: List[int]) -> List[int]:
+        n = len(nums)
+        
+        # Final answer array (initially all 1s)
+        ans = [1] * n
+        
+        # -------- PREFIX PASS --------
+        prefix = 1
+        for i in range(n):
+            # ans[i] me abhi tak ka prefix store karo
+            # (nums[i] ko chhod ke uske pehle wale numbers ka product)
+            ans[i] = prefix
+            
+            # prefix ko update karo (current element include karo)
+            prefix *= nums[i]
+        
+        # -------- SUFFIX PASS --------
+        suffix = 1
+        for i in range(n - 1, -1, -1):
+            # final answer = prefix * suffix
+            # (prefix pehle hi ans[i] me tha, ab suffix multiply kar do)
+            ans[i] *= suffix
+            
+            # suffix ko update karo (right side ke numbers ka product)
+            suffix *= nums[i]
+        
+        return ans
+   -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------     
+78.Subsets
+
+class Solution:
+    def subsets(self, nums: List[int]) -> List[List[int]]:
+        result = []
+
+        def backtrack(index, subset):
+            # If we have processed all elements → add current subset to result
+            if index == len(nums):
+                result.append(subset.copy())   # copy because subset will change later
+                return
+
+            # -------- OPTION 1: Do NOT take nums[index] --------
+            backtrack(index + 1, subset)
+
+            # -------- OPTION 2: Take nums[index] --------
+            subset.append(nums[index])        # choose current element
+            backtrack(index + 1, subset)
+
+            subset.pop()                      # backtrack: undo the choice
+
+        backtrack(0, [])
+        return result
+______________________________________________________________________________________________________________________________________________________________________________________________________________-
+
+* Day-2 *
+
+283.Move zeros
+
+class Solution:
+    def moveZeroes(self, nums: List[int]) -> None:
+        """
+        Do not return anything, modify nums in-place instead.
+        """
+
+        n = len(nums)
+
+        # num1 → store all zeros
+        # num2 → store all non-zeros
+        num1 = []
+        num2 = []
+
+        # Separate zeros and non-zeros
+        for i in nums:
+            if i == 0:
+                num1.append(i)     # collect all zeros
+            else:
+                num2.append(i)     # collect all non-zero numbers
+
+        # Modify the original nums in-place
+        # nums[:] ensures original list object gets new content
+        nums[:] = num2 + num1      # non-zeros first, then zeros
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+79.Word Search
+
+class Solution:
+    def exist(self, board: List[List[str]], word: str) -> bool:
+        rows = len(board)
+        cols = len(board[0])
+
+        def dfs(r, c, idx):
+            # If all characters matched → word found
+            if idx == len(word):
+                return True
+            
+            # Out of bounds or character mismatch → stop
+            if r < 0 or c < 0 or r >= rows or c >= cols or board[r][c] != word[idx]:
+                return False
+            
+            # Mark current cell as visited
+            temp = board[r][c]
+            board[r][c] = "#"
+
+            # Explore all 4 directions for next character
+            found = (
+                dfs(r + 1, c, idx + 1) or
+                dfs(r - 1, c, idx + 1) or
+                dfs(r, c + 1, idx + 1) or
+                dfs(r, c - 1, idx + 1)
+            )
+
+            # Backtrack: restore the original value
+            board[r][c] = temp
+
+            return found
+
+        # Try starting DFS from every cell in the grid
+        for i in range(rows):
+            for j in range(cols):
+                if dfs(i, j, 0):      # start matching from word[0]
+                    return True
+        
+        return False                  # word not found
+________________________________________________________________________________________________________
