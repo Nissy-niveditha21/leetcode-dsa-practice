@@ -125,3 +125,42 @@ class Solution:
         
         return False                  # word not found
 ________________________________________________________________________________________________________
+
+Day 3 --> two pointers
+
+80.Remove Duplicates from sorted array2
+
+class Solution {
+    public int removeDuplicates(int[] nums){
+        int i=2;
+        for(int j=2;j<nums.length;j++){
+            if(nums[j]!=nums[i-2]){
+                //i++;
+                nums[i]=nums[j];
+                i++;
+            }
+        }
+        
+        return i;
+    }
+}
+
+
+27.Remove Element
+
+class Solution {
+    public int removeElement(int[] nums, int val) {
+        int c=0;
+        for(int i=0;i<nums.length;i++){
+            if(nums[i]!=val){
+               nums[c]=nums[i];
+               c++;
+
+            }
+        }
+        return c;
+    }
+}
+
+___________________________________________________________________________________________________________________________________________________________
+
